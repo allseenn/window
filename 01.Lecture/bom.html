@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="msg"></div>
+    <script>
+        console.log(navigator.userAgent);
+        console.log(navigator.cookieEnabled);
+        console.log(navigator.doNotTrack);
+        console.log(navigator.platform);
+        navigator.geolocation.getCurrentPosition(position => console.log(position));
+        navigator.language
+        console.log(navigator.plugins);
+        navigator.mimeTypes
+        console.log(navigator.maxTouchPoints);
+        console.log(navigator.onLine); 
+        console.log(navigator.deviceMemory); 
+        const mobile = navigator.mobilePhoneNumber
+        const msg = document.querySelector('.msg');
+        msg.innerHTML = mobile
+        console.log(location)
+    </script>
+</body>
+</html>
