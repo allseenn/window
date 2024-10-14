@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button class="back" id="back">Back</button>
+    <a href="01.html">01</a>
+    <a href="02.html">02</a>
+    <button class="forward" id="forward">Forward</button>
+    <script>
+        // const back = document.querySelector('.back');
+        // const forward = document.querySelector('.forward');
+        back.addEventListener('load', function (e) {
+            history.back();
+        });
+        
+        forward.addEventListener('load', function (e) {
+            history.forward(); 
+        });
+    </script>
+</body>
+</html>

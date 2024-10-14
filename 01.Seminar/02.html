@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="add">Add element</button>
+    <button id="del">Delete element</button>
+    <button id="clone">Clone element</button>
+    <div id="container" style="display: flex; flex-wrap: wrap; width: 600px; text-align: center;">
+
+    </div>
+    <script>
+        // const add = document.querySelector('.add');
+        // const del = document.querySelector('.del');
+        // const clone = document.querySelector('.clone');
+        // const container = document.querySelector('.container');
+        let counter = 1;
+        add.addEventListener('click', () => {
+            const div = document.createElement('div');
+            div.style.width = '100px';
+            div.style.height = '100px';
+            div.style.backgroundColor = 'blue';
+            div.style.margin = '5px';
+            div.style.border = '1px solid black';
+            div.className = 'box';
+            div.id = counter;
+            div.textContent = counter;
+            container.appendChild(div, container.lastChild);
+            counter++;
+        });
+
+        del.addEventListener('click', () => {
+            if (container.children.length > 0) {
+                container.removeChild(container.lastChild);
+                counter--;
+            }
+        });
+
+        clone.addEventListener('click', () => {
+            if (container.children.length > 0) {
+                const cloneElement = container.lastChild.cloneNode(true);
+                container.appendChild(cloneElement);
+                counter++;
+            }
+        });
+    </script>
+</body>
+</html>
