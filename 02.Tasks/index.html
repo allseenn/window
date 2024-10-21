@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Котики</title>
+    <style>
+        .image {
+            width: 80vw;
+            height: 80vh;
+            object-fit: contain;
+            object-position: center;
+        }
+
+        .bread {
+            width: 80vw;
+            display: flex;
+            justify-content: center;
+        }
+
+        .buttons {
+            width: 80vw;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img src="img/01.jpg" class="image" alt="img/01.jpg">
+    </div>
+    <div class="bread">
+
+    </div>
+    <div class="buttons">
+        <button class="prev">Предыдущее изображение</button>
+        <button class="next">Следующее изображение</button>
+    </div>
+    <script>
+        const folder = './img/';
+        const images = [];
+        const loadImages = (async () => {
+            const response = await fetch(folder);
+            const list = await response.text();
+            const filenames = list.match(/href="([^"]+)"/g)
+                .map(m => m.split('"')[1].split('/').pop());
+            for (const filename of filenames) {
+                if (filename.endsWith('.jpg')) {
+                    images.push(`${folder}${filename}`);
+                }
+            }
+
+            let currentIndex = 0;
+            img = document.querySelector('.image');
+            const prev = document.querySelector('.prev');
+            const next = document.querySelector('.next');
+            prev.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    document.getElementById(currentIndex).textContent = '\u25CB';
+                    currentIndex--;
+                    document.getElementById(currentIndex).textContent = '\u25CF';
+                } else if (currentIndex === 0) {
+                    document.getElementById(currentIndex).textContent = '\u25CB';
+                    currentIndex = images.length - 1;
+                    document.getElementById(currentIndex).textContent = '\u25CF';
+                }
+                img.src = images[currentIndex];
+                img.alt = images[currentIndex];
+            });
+            next.addEventListener('click', () => {
+                if (currentIndex < images.length - 1) {
+                    document.getElementById(currentIndex).textContent = '\u25CB';
+                    currentIndex++;
+                    document.getElementById(currentIndex).textContent = '\u25CF';
+                } else if (currentIndex === images.length - 1) {
+                    document.getElementById(currentIndex).textContent = '\u25CB';
+                    currentIndex = 0;
+                    document.getElementById(currentIndex).textContent = '\u25CF';
+                }
+                img.src = images[currentIndex];
+                img.alt = images[currentIndex];
+            });
+
+            const bread = document.querySelector('.bread');
+            for (let i = 0; i < images.length; i++) {
+                const p = document.createElement('p');
+                p.id = i;
+                p.textContent = '\u25CB';
+                p.addEventListener('click', () => {
+                    document.getElementById(currentIndex).textContent = '\u25CB';
+                    currentIndex = i;
+                    img.src = images[currentIndex];
+                    img.alt = images[currentIndex];
+                    document.getElementById(currentIndex).textContent = '\u25CF';
+                });
+                bread.appendChild(p);
+            }
+            document.getElementById(0).textContent = '\u25CF';
+        })();
+    </script>
+</body>
+
+</html>

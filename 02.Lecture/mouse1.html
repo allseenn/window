@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .menu-time{
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <div class="menu-item">Пункт 1</div>
+        <div class="menu-item">Пункт 2</div>
+        <div class="menu-item">Пункт 3</div>
+    </div>
+    <script>
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('mouseover', (e) => {
+               item.style.backgroundColor = '#f0f0f0';
+            });
+            item.addEventListener('mouseout', (e) => {
+               item.style.backgroundColor = '';
+            });
+            item.addEventListener('click', (e) => {
+                console.log(item.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

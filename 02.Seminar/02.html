@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .btn-open {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    .btn-close {
+        background-color: #f44336;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    .window {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 200px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 24px;
+        
+    }
+</style>
+<body>
+    <button class="btn-open">Open window</button>
+    <div class="window">
+        <p>This is a modal window</p>
+        <button class="btn-close">Close window</button>
+    </div>
+    <script>
+    const modal = document.querySelector('.window');
+    const close = document.querySelector('.btn-close');
+    
+    close.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+
+    const open = document.querySelector('.btn-open');
+    open.addEventListener('click', function() {
+        modal.style.display = '';
+    });
+    </script>
+</body>
+</html>

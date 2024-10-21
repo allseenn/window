@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .menu-container{
+            background-color: darkslategray;
+            color: white;
+            
+        }
+        .menu{
+            height: 40px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .item {
+            padding-left: 10px;
+            padding-right: 10px;
+            height: inherit;
+            display: flex;
+            align-items: center;
+        }
+
+        .item:hover{
+            background-color: gray;
+            align-content: center;
+            height: inherit;
+            width: inherit;
+        }
+
+        .active{
+            background-color: white;
+            color: darkslategray;
+            align-content: center;
+            height: inherit;
+
+        }
+    </style>
+</head>
+<body>
+    <nav class="menu-container">
+        <ul class="menu">
+            <li class="item">Menu 1</li>
+            <li class="item">Menu 2</li>
+            <li class="item">Menu 3</li>
+            <li class="item">Menu 4</li>
+            <li class="item">Menu 5</li>
+        </ul>
+    </nav>
+    <script>
+        const items = document.querySelectorAll('.item');
+        items.forEach(item => {
+            item.addEventListener('click', function () {
+                items.forEach(i => {
+                    i.classList.remove('active');
+                });
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
