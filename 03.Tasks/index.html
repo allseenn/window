@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +15,7 @@
         align-items: center;
     }
 
-    #unsplashImage {
+    .unsplashImage {
         max-height: 500px;
         border: 20px solid black;
         transform: rotate(3deg);
@@ -64,45 +63,66 @@
 
     .likes {
         color: white;
-        font-size: 20px;
+        font-size: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: 5px;
+        top: 8px;
     }
 </style>
 <body>
     <h3 class="description"></h3>
     <div class="imageContainer">
-        <a id="imageLink" href="#">
-            <img alt="" id="unsplashImage" />
+        <a class="imageLink" href="#">
+            <img alt="" class="unsplashImage" />
         </a>
         <div class="favor">
             <p class="heart">&#9829;</p>
             <p class="likes"></p>
         </div>
     </div>
-    <p class="imageDetails">Author: <a id="creator" href="#">NAME</a></p>
-    <p class="data"></p>
+    <p class="imageDetails">Автор: <a class="creator" href="#">NAME</a></p>
+    <p>Создано: <span class="data"></span></p>
+    <div class="history">
+        <h3>История просмотров</h3>
+        <ol class="historyList"></ol>
+    </div>
     <script>
-        // Загружаю токены из файла, чтобы не утекли в интернет с гита
+        // Пояснение:
+        // Для работы с unsplash нужно два вида токенов: API, OAuth2
+        // Без OAuth2 не поставить лайки, т.к. это приватная часть, требующая авторизацию юзера.
+        // Токены храню в файле tokens.json, на который создал символическую ссылку,
+        // Чтобы они не утекли в инет через гитхаб.
+        // Понимаю, что возможно не прав, но не нашел другого способа их не светить
         const xhr = new XMLHttpRequest();
-        xhr.open('GET', '../tokens.json', false); // символьная ссылка на файл, поэтому внутри него виден только путь, но не токены
+        xhr.open('GET', '../tokens.json', false);
         xhr.send();
         const tokens = JSON.parse(xhr.response);
-        const API_KEY = tokens['unsplash.com']['access_key']; // API токен для публичный операций, типа загрузка фоток с сайта
-        const OAUTH = tokens['unsplash.com']['oauth_token']; // OAuth2 токен для приватных операций, к которым относится и лайк
+        const API_KEY = tokens['unsplash.com']['access_key']; // API ключ для работы с публичной частью, типа загрузка фоток
+        const OAUTH = tokens['unsplash.com']['oauth_token']; // OAuth токен для работы с приватной частью, типа лайки фоток
 
         let endpoint = `https://api.unsplash.com/photos/random?client_id=${API_KEY}`;
-        let description = document.querySelector(".description")
-        let imageElement = document.querySelector("#unsplashImage");
-        let imageLink = document.querySelector("#imageLink");
-        let creator = document.querySelector("#creator")
-        let data = document.querySelector(".data")
-        let favor = document.querySelector(".favor")
-        let likes = document.querySelector(".likes")
-        // Загружаю рандомную фотку и информацию о ней в объекте jsonData
+        let description = document.querySelector(".description");
+        let imageElement = document.querySelector(".unsplashImage");
+        let imageLink = document.querySelector(".imageLink");
+        let creator = document.querySelector(".creator");
+        let data = document.querySelector(".data");
+        let favor = document.querySelector(".favor");
+        let likes = document.querySelector(".likes");
+        let historyList = document.querySelector(".historyList");
+        const history = JSON.parse(localStorage.getItem('history')) || [];
+        historyList.innerHTML = '';
+
+        history.forEach((item) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = item.url;
+            a.innerText = item.date;
+            li.appendChild(a);
+            historyList.appendChild(li);
+        });
+
         fetch(endpoint)
             .then((response) => response.json())
             .then((jsonData) => {
@@ -114,8 +134,13 @@
                 creator.innerText = jsonData.user.name;
                 creator.setAttribute("href", jsonData.user.portfolio_url);
                 data.innerText = jsonData.created_at;
+                const date = new Date();
+                const dateString = `${date.toLocaleString('ru', {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
+                const historyEntry = {url: jsonData.links.html, date: dateString};
+                history.push(historyEntry);
+                localStorage.setItem('history', JSON.stringify(history));
+
                 favor.addEventListener("click", () => {
-                    // ставлю лайк
                     fetch(`https://api.unsplash.com/photos/${jsonData.id}/like`, {
                         method: 'POST',
                         headers: {
@@ -123,13 +148,23 @@
                             'Content-Type': 'application/json'
                         }
                     })
-                    .then(() => 
-                    // получаю обновленное количество лайков из объекта jsonData
-                    fetch(`https://api.unsplash.com/photos/${jsonData.id}?client_id=${API_KEY}`)
-                    .then((response) => response.json())
-                    .then((jsonData) => {
-                        likes.innerText = jsonData.likes;
-                    }));
+                    .then(() =>
+                        fetch(`https://api.unsplash.com/photos/${jsonData.id}?client_id=${API_KEY}`)
+                            .then((response) => response.json())
+                            .then((jsonData) => {
+                                likes.innerText = jsonData.likes;
+                            })
+                    );
+                });
+                historyList.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const clickedLink = event.target.closest('a');
+                    if (clickedLink) {
+                        const historyItem = history.find(item => item.url === clickedLink.href);
+                        if (historyItem) {
+                            window.open(historyItem.url, '_blank'); 
+                        }
+                    }
                 });
             })
             .catch((error) => {
