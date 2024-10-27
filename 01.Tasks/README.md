@@ -22,4 +22,3 @@
 
 [index.html](index.html)
 
-$f(x,y)=1/2 * [(2x+y-1)^2 + (x+y-2)^2 + (3x+y+1)^2]$
